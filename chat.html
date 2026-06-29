@@ -1,0 +1,1001 @@
+<!-- Pathfinder Chat | Financial Pre-Lander | USA Audience -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pathfinder — Your Financial Starting Point</title>
+<style>
+  :root {
+    --color-bg: #F8FAFC;
+    --color-card: #FFFFFF;
+    --color-primary: #1E293B;
+    --color-primary-light: #334155;
+    --color-accent: #0D9488;
+    --color-accent-hover: #0F766E;
+    --color-accent-light: #F0FDFA;
+    --color-accent-glow: rgba(13, 148, 136, 0.12);
+    --color-text: #1E293B;
+    --color-text-secondary: #64748B;
+    --color-text-light: #94A3B8;
+    --color-border: #E2E8F0;
+    --color-border-hover: #CBD5E1;
+    --color-success: #10B981;
+    --color-gradient-start: #ECFEFF;
+    --color-gradient-end: #F0FDFA;
+    --radius-card: 16px;
+    --radius-btn: 10px;
+    --radius-bubble: 16px;
+    --radius-pill: 24px;
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    --shadow-glow: 0 0 0 3px var(--color-accent-glow);
+    --transition-fast: 0.15s ease;
+    --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%);
+    background-attachment: fixed;
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 12px;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(13, 148, 136, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  main {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    max-height: 800px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── Header ─── */
+  .chat-header {
+    text-align: center;
+    padding: 12px 0 18px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .chat-header::before {
+    content: '';
+    width: 24px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-accent));
+    border-radius: 2px;
+  }
+
+  .chat-header::after {
+    content: '';
+    width: 24px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-accent), transparent);
+    border-radius: 2px;
+  }
+
+    .chat-container {
+    flex: 1;
+    background: #F1F5F9;
+    border-radius: var(--radius-card);
+    box-shadow:
+      var(--shadow-lg),
+      0 0 0 1px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    overflow-y: auto;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+  }
+
+  .chat-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-accent) 0%, #0EA5E9 100%);
+    opacity: 0.9;
+    z-index: 1;
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
+  }
+
+  /* ─── Bot bubble ─── */
+  .bot-message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 90%;
+    animation: fadeInUp 0.35s ease both;
+  }
+
+    .bot-bubble {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 18px;
+    border-top-left-radius: 4px;
+    padding: 14px 18px;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    line-height: 1.55;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  .bot-bubble p {
+    margin-bottom: 8px;
+  }
+
+  .bot-bubble p:last-child {
+    margin-bottom: 0;
+  }
+
+  .bot-bubble ul {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .bot-bubble ul li {
+    padding: 10px 14px;
+    background: var(--color-card);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow-xs);
+    transition: all var(--transition);
+  }
+
+  .bot-bubble ul li:hover {
+    box-shadow: var(--shadow-sm);
+    transform: translateX(4px);
+  }
+    /* ─── User message ─── */
+  .user-message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    max-width: 85%;
+    margin-left: auto;
+    animation: fadeInUp 0.25s ease both;
+  }
+
+  .user-bubble {
+    background: var(--color-accent);
+    color: #fff;
+    border-radius: 18px;
+    border-top-right-radius: 4px;
+    padding: 12px 18px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(13, 148, 136, 0.2);
+  }
+  /* ─── Summary block inside bubble ─── */
+  .summary-block {
+    background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid rgba(13, 148, 136, 0.15);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-primary);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+    .typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 12px 18px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 20px;
+    border-top-left-radius: 4px;
+    width: fit-content;
+    animation: fadeInUp 0.3s ease both;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  .typing-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-text-light);
+    animation: typingBounce 1.3s infinite ease-in-out;
+  }
+
+  .typing-dot:nth-child(1) { animation-delay: 0s; }
+  .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    animation: fadeInUp 0.35s ease both;
+    padding: 0 4px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 52px;
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text);
+    background: var(--color-card);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    transition: all var(--transition);
+    line-height: 1.5;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--color-accent);
+    transform: scaleY(0);
+    transition: transform var(--transition);
+  }
+
+  .option-btn:hover {
+    border-color: var(--color-accent);
+    background: linear-gradient(135deg, var(--color-accent-light) 0%, #F0FDFA 100%);
+    box-shadow: var(--shadow-sm);
+    transform: translateX(2px);
+  }
+
+  .option-btn:hover::before {
+    transform: scaleY(1);
+  }
+
+  .option-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-glow), var(--shadow-sm);
+    border-color: var(--color-accent);
+  }
+
+  .option-btn:active {
+    transform: scale(0.99);
+  }
+
+  /* ─── CTA button (partner link) ─── */
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 56px;
+    padding: 16px 24px;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
+    border: none;
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all var(--transition);
+    box-shadow:
+      0 4px 6px rgba(13, 148, 136, 0.2),
+      0 2px 4px rgba(13, 148, 136, 0.15);
+    animation: fadeInUp 0.4s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .cta-btn:hover {
+    background: linear-gradient(135deg, var(--color-accent-hover) 0%, #115E59 100%);
+    box-shadow:
+      0 6px 8px rgba(13, 148, 136, 0.25),
+      0 4px 6px rgba(13, 148, 136, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .cta-btn:hover::before {
+    left: 100%;
+  }
+
+  .cta-btn:active {
+    transform: translateY(0);
+  }
+
+  .cta-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-glow), var(--shadow-md);
+  }
+
+  /* ─── PDF button ─── */
+  .pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 56px;
+    padding: 16px 24px;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    background: var(--color-card);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    text-align: center;
+    transition: all var(--transition);
+    animation: fadeInUp 0.4s ease both;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .pdf-btn:hover {
+    background: #EBF8FF;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .pdf-btn:active {
+    transform: scale(0.99);
+  }
+
+  .pdf-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-glow), var(--shadow-sm);
+  }
+
+  /* ─── Start over link ─── */
+  .reset-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 12px 16px;
+    text-decoration: none;
+    transition: all var(--transition);
+    margin: 8px auto 0;
+    border-radius: var(--radius-pill);
+    font-weight: 500;
+    animation: fadeInUp 0.5s ease both;
+  }
+
+  .reset-link:hover {
+    color: var(--color-accent);
+    background: var(--color-accent-light);
+  }
+
+  .reset-link:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-glow);
+  }
+    /* ─── Input area (fixed at bottom) ─── */
+  .input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 18px;
+    background: #fff;
+    border-top: 1px solid var(--color-border);
+    flex-shrink: 0;
+    z-index: 2;
+    border-radius: 0 0 var(--radius-card) var(--radius-card);
+  }
+
+  .quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .quick-reply {
+    padding: 8px 14px;
+    background: var(--color-accent-light);
+    border: 1px solid rgba(13, 148, 136, 0.2);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    cursor: pointer;
+    transition: all var(--transition);
+    white-space: nowrap;
+  }
+
+  .quick-reply:hover {
+    background: var(--color-accent);
+    color: #fff;
+    border-color: var(--color-accent);
+  }
+
+  .input-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .text-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 24px;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    background: #F8FAFC;
+    outline: none;
+    transition: border-color var(--transition);
+    font-family: inherit;
+  }
+
+  .text-input:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-glow);
+  }
+
+  .text-input::placeholder {
+    color: var(--color-text-light);
+  }
+
+  .send-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+    flex-shrink: 0;
+  }
+
+  .send-btn:hover {
+    background: var(--color-accent-hover);
+    transform: scale(1.05);
+  }
+
+  .send-btn:active {
+    transform: scale(0.97);
+  }
+
+  .send-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  /* ─── Accessibility ─── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+    @media (max-width: 479px) {
+    body {
+      padding: 0;
+    }
+
+    main {
+      height: 100vh;
+      max-height: 100vh;
+    }
+
+    .chat-container {
+      padding: 18px 14px;
+      border-radius: 0;
+    }
+
+    .option-btn {
+      padding: 12px 14px;
+      min-height: 48px;
+    }
+
+    .bot-bubble {
+      padding: 12px 14px;
+    }
+
+        .input-area {
+      padding: 10px 12px;
+    }
+
+    .text-input {
+      padding: 10px 14px;
+      font-size: 0.9rem;
+    }
+
+    .quick-reply {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <div class="chat-header">🧭 Pathfinder</div>
+
+  <div class="chat-container" id="chat-container" role="log" aria-label="Chat with Pathfinder">
+    <!-- All messages appear here dynamically -->
+  </div>
+    <div class="input-area" id="input-area">
+    <div class="quick-replies" id="quick-replies"></div>
+    <div class="input-row">
+      <input type="text" class="text-input" id="text-input" placeholder="Type your answer here..." disabled>
+      <button class="send-btn" id="send-btn" disabled>↑</button>
+    </div>
+  </div>
+</main>
+</main>
+
+<script>
+(function() {
+  'use strict';
+
+  var state = { G: null, U: null, C: null, P: null };
+  var chat = document.getElementById('chat-container');
+
+  var block1 = {
+    G1: { C1: "You're in a great spot to simplify your finances on favorable terms.", C2: "For your situation, consolidation is about clarity first — savings come second.", C3: "Combining your debts can be a smart first move toward a cleaner financial picture." },
+    G2: { C1: "You've got a solid foundation — you can take your time picking the right solution, no compromises needed.", C2: "Unexpected expenses happen. The goal is covering them without creating new headaches down the road.", C3: "Here, it's all about finding an option that won't add pressure to your current situation and still leaves you room to breathe." },
+    G3: { C1: "With your profile, you can comfortably shop around and choose the best offer — not just the first one you see.", C2: "A big purchase shouldn't throw your budget off track. Look for a solution with flexible terms and some breathing room.", C3: "Even if your credit history isn't perfect, a planned purchase can be handled calmly and wisely." },
+    G4: { C1: "Good news: you're already in a strong place. Now you can reinforce your credit with minimal cost and effort.", C2: "You're on the right path. A few thoughtful moves can make a visible difference in your credit profile.", C3: "Rebuilding is a process — and it's entirely doable when you take it step by step." }
+  };
+
+  var block2 = {
+    G1: { P1: "In your case, the best move is to look for fixed-rate programs with no hidden fees. Your goal isn't just a lower monthly payment — it's paying less overall.", P2: "Speed matters, but with consolidation it's worth spending at least a day comparing total cost. A fast decision shouldn't mean an expensive one.", P3: "Transparency is everything for you. Look for options with no prepayment penalties and a fixed payment schedule you can count on.", P4: "Consolidation and credit improvement can work hand in hand — just make sure the program reports to all three major bureaus. Ask this upfront." },
+    G2: { P1: "Even when things are urgent, don't jump at the first offer. Compare APR, not just the monthly payment — that's what saves you real money.", P2: "Speed is justified here. Just double-check there aren't hidden fees buried in the fast process. Fast and transparent does exist.", P3: "Under stress, it's easy to skim the fine print. Make a rule: one contract, one evening to read it. Every term should be crystal clear.", P4: "Even an emergency option can work as a credit-building tool — if you pick a program that reports to the bureaus." },
+    G3: { P1: "Since this purchase is planned, you have time to negotiate on terms. Compare not just APR, but every associated fee.", P2: "Fast doesn't mean careless. A quick process is great — as long as you're not giving up a significantly better deal for it.", P3: "Your biggest advantage is time. Use it to find a contract with absolute transparency. No vague language, no hidden clauses.", P4: "A major purchase can strengthen your credit mix. Choose a product that will show up positively on your reports." },
+    G4: { P1: "You don't need to overspend to build credit. Look for credit-builder products with low annual costs and sensible terms.", P2: "Quick enrollment is a plus. But make sure the program actually reports to the credit bureaus — otherwise the speed doesn't help.", P3: "The ideal scenario: a fixed monthly payment, interest you can calculate in advance, transparent bureau reporting. Zero surprises.", P4: "You're looking in exactly the right direction. A small account with bureau reporting and on-time payments does more for your credit than a large one without it." }
+  };
+
+  var block3 = {
+    U1: { P1: "When you're actively searching, it's tempting to chase the lowest advertised figure and overlook fees. Always check the full cost — not just the headline number.", P2: "Fast doesn't mean blind. Spend 15 minutes checking a company's reputation. It can save you weeks of stress later.", P3: "Right now, the biggest risk is letting urgency blur the details. Read the final agreement — not just the summary card.", P4: "Even an urgent need can become a building block for your credit. Ask your partner directly about bureau reporting." },
+    U2: { P1: "You've got time to compare calmly. Make a simple table: three options, three columns — terms, fees, timeline.", P2: "Since there's no rush, find out how long the process typically takes at different companies. That knowledge will pay off later.", P3: "Use this time to read real customer reviews and verify how transparent each company really is. That's your best investment right now.", P4: "You're in an excellent position: no urgency, so you can thoughtfully pick a product that solves your need and strengthens your credit at the same time." }
+  };
+
+  var block4 = {
+    G1: { P1: ["What is the total cost including all fees?", "Is there a prepayment penalty?", "Is the new payment genuinely lower than what I pay now across all debts?"], P2: ["How many days until funds actually arrive?", "Am I giving up a better deal for speed?", "Can I understand the payment schedule at a glance?"], P3: ["Are all fees disclosed before I sign?", "Can I pay it off early without a penalty?", "Are there any paragraphs written in confusing language?"], P4: ["Does the company report to all three major credit bureaus?", "Will consolidation positively affect my credit mix?", "Will this new application temporarily impact my profile?"] },
+    G2: { P1: ["What's the total repayment amount, not just the monthly figure?", "Are there hidden origination fees?", "Can I pay it off early and save on interest?"], P2: ["Is the advertised funding speed realistic?", "What documents do I need ready for a fast process?", "Does the fast track come with less favorable terms?"], P3: ["Are all terms written in plain, straightforward language?", "Is the arrangement fixed or variable?", "What exactly happens if I miss a payment — is it clearly explained?"], P4: ["Will this appear on my credit reports?", "Can it help diversify my credit profile?", "How do I protect my progress if something unexpected happens later?"] },
+    G3: { P1: ["Have I compared at least three offers by total cost?", "Are there setup or maintenance fees I'm missing?", "Can I save money by choosing a shorter term?"], P2: ["Does getting funds faster significantly change the overall deal?", "What matters more to me right now: speed or total savings?", "Are my documents ready so I can move quickly when I decide?"], P3: ["Could I explain this contract to a friend in under a minute?", "Are there any references to 'variable terms'?", "Is the arrangement locked for the full term?"], P4: ["Will this purchase improve my credit mix?", "Does the provider report to the bureaus?", "How does this new payment affect my overall financial picture?"] },
+    G4: { P1: ["What's the real annual cost — not just the advertised one?", "Is there a less expensive way to reach the same credit goal?", "Do the credit benefits justify the interest cost?"], P2: ["How soon does the account open and start reporting?", "When will the first update hit my credit file?", "Does faster access compromise the credit-building aspect?"], P3: ["Are all payments fixed and predictable?", "Are there any floating or adjustable conditions?", "What happens if I want to close the program early?"], P4: ["Does the product report to all three major credit bureaus?", "Which specific credit factor does it improve first?", "Does the partner offer any credit education resources?"] }
+  };
+
+  var reactions = {
+    G1: "Got it. Simplifying your payments is a smart move.",
+    G2: "Understood. Unexpected things happen — having a plan helps.",
+    G3: "Makes sense. Planning ahead puts you in control.",
+    G4: "Great direction. Building your credit opens doors.",
+    U1: "Good to know. I'll keep that in mind.",
+    U2: "That's wise — no rush means better decisions.",
+    C1: "That's a great foundation to work from.",
+    C2: "Thanks for being honest. That helps me point you in the right direction.",
+    C3: "Rebuilding takes time, and you're taking a positive step right now.",
+    P1: "Cost-conscious — I like it. Here's what I'd suggest.",
+    P2: "Speed matters. Let me show you what fits.",
+    P3: "Transparency is key. Here's what to look for.",
+    P4: "Thinking long-term is the way to go. Here's your path."
+  };
+
+  var questionTexts = [
+    "What brings you here today?",
+    "How soon are you hoping to have a plan in place?",
+    "How would you describe your credit comfort level today?",
+    "When choosing a financial solution, what matters most to you?"
+  ];
+
+  var optionSets = [
+    [
+      { key: 'G', val: 'G1', text: 'Combine several debts into one simple payment' },
+      { key: 'G', val: 'G2', text: 'Cover a large, unexpected expense' },
+      { key: 'G', val: 'G3', text: 'Make a planned major purchase' },
+      { key: 'G', val: 'G4', text: 'Build or strengthen my credit profile' }
+    ],
+    [
+      { key: 'U', val: 'U1', text: "I'm actively looking for a solution right now" },
+      { key: 'U', val: 'U2', text: "I'm researching options for the near future" }
+    ],
+    [
+      { key: 'C', val: 'C1', text: "I'm in a strong position" },
+      { key: 'C', val: 'C2', text: "It's okay — there's room to improve" },
+      { key: 'C', val: 'C3', text: "I'm working on rebuilding it" }
+    ],
+    [
+      { key: 'P', val: 'P1', text: 'The lowest overall cost' },
+      { key: 'P', val: 'P2', text: 'Fast and straightforward access' },
+      { key: 'P', val: 'P3', text: 'Clear, predictable terms with no surprises' },
+      { key: 'P', val: 'P4', text: 'Something that helps my credit over time' }
+    ]
+  ];
+
+  function scrollToBottom() {
+    setTimeout(function() {
+      chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
+    }, 100);
+  }
+
+  function delay(ms) {
+    return new Promise(function(resolve) { setTimeout(resolve, ms); });
+  }
+
+  function randomDelay() {
+    return 600 + Math.random() * 500;
+  }
+
+  function showTyping() {
+    var el = document.createElement('div');
+    el.className = 'typing-indicator';
+    el.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+    chat.appendChild(el);
+    scrollToBottom();
+    return el;
+  }
+
+  function removeTyping(el) {
+    if (el && el.parentNode) { el.remove(); }
+  }
+
+  function addBotMessage(html) {
+    var wrapper = document.createElement('div');
+    wrapper.className = 'bot-message';
+    var bubble = document.createElement('div');
+    bubble.className = 'bot-bubble';
+    bubble.innerHTML = html;
+    wrapper.appendChild(bubble);
+    chat.appendChild(wrapper);
+    scrollToBottom();
+    return wrapper;
+  }
+    function addUserMessage(text) {
+    var wrapper = document.createElement('div');
+    wrapper.className = 'user-message';
+    var bubble = document.createElement('div');
+    bubble.className = 'user-bubble';
+    bubble.textContent = text;
+    wrapper.appendChild(bubble);
+    chat.appendChild(wrapper);
+    scrollToBottom();
+    return wrapper;
+  }
+      function addOptions(options, callback) {
+    var quickReplies = document.getElementById('quick-replies');
+    var textInput = document.getElementById('text-input');
+    var sendBtn = document.getElementById('send-btn');
+
+    // Очистить старые подсказки
+    quickReplies.innerHTML = '';
+
+    // Добавить кнопки быстрых ответов
+    options.forEach(function(opt) {
+      var chip = document.createElement('span');
+      chip.className = 'quick-reply';
+      chip.textContent = opt.text;
+      chip.addEventListener('click', function() {
+        handleChoice(opt);
+      });
+      quickReplies.appendChild(chip);
+    });
+
+    // Включить ввод текста
+    textInput.disabled = false;
+    textInput.placeholder = 'Or type your answer here...';
+    textInput.value = '';
+    textInput.focus();
+
+    // Обработчик кнопки отправки
+    function onSend() {
+      var typedText = textInput.value.trim();
+      if (!typedText) return;
+
+      // Найти ближайший вариант (простое сравнение)
+      var matched = null;
+      options.forEach(function(opt) {
+        if (opt.text.toLowerCase().indexOf(typedText.toLowerCase()) !== -1 ||
+            typedText.toLowerCase().indexOf(opt.text.toLowerCase().substring(0, 10)) !== -1) {
+          matched = opt;
+        }
+      });
+
+      if (matched) {
+        handleChoice(matched);
+      } else {
+        // Если непонятно — берём первый вариант и показываем что набрали
+        addUserMessage(typedText);
+        handleChoice(options[0]);
+      }
+    }
+
+    sendBtn.addEventListener('click', onSend);
+    textInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        onSend();
+      }
+    });
+
+    function handleChoice(opt) {
+      // Показать сообщение пользователя
+      addUserMessage(opt.text);
+
+      // Очистить подсказки, заблокировать ввод
+      quickReplies.innerHTML = '';
+      textInput.disabled = true;
+      textInput.placeholder = '';
+      textInput.value = '';
+      sendBtn.disabled = true;
+
+      callback(opt);
+    }
+  }
+  function addCTAButton(text, href) {
+    var a = document.createElement('a');
+    a.className = 'cta-btn';
+    a.textContent = text;
+    a.href = href;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    chat.appendChild(a);
+    scrollToBottom();
+    return a;
+  }
+
+  function addPDFButton(text) {
+    var btn = document.createElement('button');
+    btn.className = 'pdf-btn';
+    btn.textContent = text;
+    chat.appendChild(btn);
+    scrollToBottom();
+    return btn;
+  }
+
+  function addResetLink() {
+    var btn = document.createElement('button');
+    btn.className = 'reset-link';
+    btn.textContent = 'Start over';
+    btn.addEventListener('click', resetChat);
+    chat.appendChild(btn);
+    scrollToBottom();
+  }
+
+  function buildSummaryHTML() {
+    var G = state.G;
+    var U = state.U;
+    var C = state.C;
+    var P = state.P;
+    var b1 = block1[G][C];
+    var b2 = block2[G][P];
+    var b3 = block3[U][P];
+    var b4 = block4[G][P];
+    var questionsHtml = '';
+    for (var i = 0; i < b4.length; i++) {
+      questionsHtml += '<li>' + b4[i] + '</li>';
+    }
+
+    return '<div class="summary-block">' + b1 + '</div>' +
+      '<p style="margin-top:12px;">' + b2 + '</p>' +
+      '<p style="margin-top:12px;"><strong>A few things to keep in mind right now:</strong><br>' + b3 + '</p>' +
+      '<p style="margin-top:12px;"><strong>Before you choose, ask these three questions:</strong></p>' +
+      '<ul>' + questionsHtml + '</ul>';
+  }
+
+  function generatePDF() {
+    var G = state.G;
+    var U = state.U;
+    var C = state.C;
+    var P = state.P;
+    var b1 = block1[G][C];
+    var b2 = block2[G][P];
+    var b3 = block3[U][P];
+    var b4 = block4[G][P];
+    var questionsHtml = '';
+    for (var i = 0; i < b4.length; i++) {
+      questionsHtml += '<li>' + b4[i] + '</li>';
+    }
+
+    var htmlContent = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' +
+      'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:40px;color:#1E293B;line-height:1.6}' +
+      'h1{color:#1E293B;font-size:1.4rem;margin-bottom:20px}' +
+      'h2{color:#0D9488;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;margin:20px 0 8px}' +
+      '.summary{background:#ECFEFF;padding:16px;border-radius:8px;border-left:4px solid #0D9488}' +
+      'ul{padding-left:20px}li{margin-bottom:6px}' +
+      '.footer{margin-top:30px;font-size:0.75rem;color:#64748B;border-top:1px solid #E2E8F0;padding-top:12px}' +
+      '.partner-link{color:#0D9488;font-weight:600}' +
+      '</style></head><body>' +
+      '<h1>Your Financial Snapshot</h1>' +
+      '<div class="summary">' + b1 + '</div>' +
+      '<h2>What Makes Sense For You</h2><p>' + b2 + '</p>' +
+      '<h2>Right Now</h2><p>' + b3 + '</p>' +
+      '<h2>Three Questions To Ask</h2><ul>' + questionsHtml + '</ul>' +
+      '<div class="footer">Prepared by Pathfinder. For informational purposes only.</div>' +
+      '</body></html>';
+
+    var blob = new Blob([htmlContent], { type: 'text/html' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'Your-Financial-Snapshot.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  async function startFlow() {
+    var typing1 = showTyping();
+    await delay(randomDelay());
+    removeTyping(typing1);
+    addBotMessage("Hi there! I'll help you figure out which financial solution fits your situation.<br><br>It takes about two minutes. Ready?");
+    await delay(500);
+    askQuestion(0);
+  }
+
+  async function askQuestion(index) {
+    var typing = showTyping();
+    await delay(randomDelay());
+    removeTyping(typing);
+    addBotMessage(questionTexts[index]);
+    await delay(300);
+
+    addOptions(optionSets[index], async function(opt) {
+      state[opt.key] = opt.val;
+      var reactionMsg = reactions[opt.val];
+
+      if (index < 3) {
+        if (reactionMsg) {
+          var rTyping = showTyping();
+          await delay(randomDelay());
+          removeTyping(rTyping);
+          addBotMessage(reactionMsg);
+          await delay(400);
+        }
+        askQuestion(index + 1);
+      } else {
+        var rTyping = showTyping();
+        await delay(randomDelay());
+        removeTyping(rTyping);
+        addBotMessage(reactionMsg);
+        await delay(400);
+
+        var summaryTyping = showTyping();
+        await delay(1200 + Math.random() * 600);
+        removeTyping(summaryTyping);
+
+        addBotMessage(buildSummaryHTML());
+        await delay(600);
+
+        var pdfBtn = addPDFButton('Download Your Personalized Snapshot (PDF)');
+        pdfBtn.addEventListener('click', function() {
+          pdfBtn.textContent = 'Generating...';
+          pdfBtn.disabled = true;
+          setTimeout(function() {
+            generatePDF();
+            pdfBtn.textContent = 'Downloaded! Click to download again';
+            pdfBtn.disabled = false;
+          }, 1200);
+        });
+
+        await delay(400);
+
+        addCTAButton('View partner terms', '#partner-offer');
+
+        await delay(500);
+
+        addBotMessage("If you want to start over, use the button below. You're on the right path.");
+        addResetLink();
+      }
+    });
+  }
+
+
+    function resetChat() {
+    chat.innerHTML = '';
+    document.getElementById('quick-replies').innerHTML = '';
+    document.getElementById('text-input').disabled = true;
+    document.getElementById('text-input').value = '';
+    document.getElementById('text-input').placeholder = '';
+    document.getElementById('send-btn').disabled = true;
+    state.G = null;
+    state.U = null;
+    state.C = null;
+    state.P = null;
+    startFlow();
+  }
+  document.addEventListener('DOMContentLoaded', startFlow);
+
+})();
+</script>
+</body>
+</html>

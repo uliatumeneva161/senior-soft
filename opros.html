@@ -1,0 +1,898 @@
+<!-- Pathfinder App | Financial Pre-Lander | USA Audience -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pathfinder — Find Your Financial Starting Point</title>
+<style>
+  :root {
+    --color-bg: #F7FAFC;
+    --color-card: #FFFFFF;
+    --color-primary: #1A365D;
+    --color-accent: #319795;
+    --color-accent-hover: #2C7A7B;
+    --color-accent-light: #F0FDF9;
+    --color-text: #2D3748;
+    --color-text-light: #718096;
+    --color-border: #E2E8F0;
+    --color-border-selected: #319795;
+    --color-success: #38A169;
+    --color-error: #E53E3E;
+    --radius-card: 12px;
+    --radius-btn: 8px;
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --transition: 0.25s ease;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 16px 60px;
+  }
+
+  main {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  /* ─── Brand strip ─── */
+  .brand {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-light);
+  }
+
+  /* ─── Card ─── */
+  .card {
+    background: var(--color-card);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border);
+    padding: 32px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (min-width: 480px) {
+    .card { padding: 40px 44px; }
+  }
+
+  /* ─── Screen layer ─── */
+  .screen {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    position: absolute;
+    width: calc(100% - 48px);
+  }
+
+  @media (min-width: 480px) {
+    .screen { width: calc(100% - 88px); }
+  }
+
+  .screen.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+    position: relative;
+    width: 100%;
+  }
+
+  .screen.exit {
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+  }
+
+  /* ─── Step indicator ─── */
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .step-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .step-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-border);
+    transition: background var(--transition);
+  }
+
+  .step-dot.done { background: var(--color-accent); }
+  .step-dot.current { background: var(--color-primary); }
+
+  .step-label {
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+    margin-left: 4px;
+  }
+
+  /* ─── Icon ─── */
+  .card-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 20px;
+    line-height: 1;
+  }
+
+  /* ─── Headings ─── */
+  h1 {
+    font-size: clamp(1.4rem, 4vw, 1.75rem);
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-size: clamp(1.1rem, 3.5vw, 1.25rem);
+    font-weight: 600;
+    color: var(--color-primary);
+    line-height: 1.35;
+    margin-bottom: 20px;
+  }
+
+  .subheadline {
+    font-size: 1rem;
+    color: var(--color-text-light);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  /* ─── Option buttons ─── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-btn {
+    display: block;
+    width: 100%;
+    min-height: 52px;
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text);
+    background: var(--color-card);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    transition: border-color var(--transition), background var(--transition), color var(--transition);
+    line-height: 1.45;
+  }
+
+  .option-btn:hover {
+    border-color: var(--color-accent);
+    background: var(--color-accent-light);
+  }
+
+  .option-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .option-btn.selected {
+    border-color: var(--color-accent);
+    background: var(--color-accent-light);
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  /* ─── CTA button ─── */
+  .cta-btn {
+    display: block;
+    width: 100%;
+    min-height: 52px;
+    padding: 14px 20px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--color-accent);
+    border: none;
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    transition: background var(--transition), transform var(--transition);
+    text-align: center;
+  }
+
+  .cta-btn:hover { background: var(--color-accent-hover); }
+  .cta-btn:active { transform: scale(0.99); }
+  .cta-btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+  /* ─── Screen 0 layout ─── */
+  #screen-0 { text-align: center; }
+  #screen-0 .card-icon { font-size: 2.5rem; }
+  #screen-0 h1 { font-size: clamp(1.5rem, 5vw, 2rem); }
+  #screen-0 .cta-btn { max-width: 240px; margin: 0 auto; }
+
+  /* ─── Results ─── */
+  .result-block {
+    margin-bottom: 28px;
+  }
+
+  .result-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .result-text {
+    font-size: 1rem;
+    color: var(--color-text);
+    line-height: 1.65;
+  }
+
+  .result-text p { margin-bottom: 8px; }
+
+  .result-questions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .result-questions li {
+    padding: 10px 14px;
+    background: var(--color-bg);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    line-height: 1.5;
+  }
+
+  .result-divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: 28px 0;
+  }
+
+  .result-header-block {
+    background: linear-gradient(135deg, #EBF8FF 0%, #E6FFFA 100%);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 28px;
+    border: 1px solid #BEE3F8;
+  }
+
+  .result-header-block .result-label { color: var(--color-primary); }
+  .result-header-block .result-text { font-weight: 500; font-size: 1.05rem; }
+
+  /* ─── Email capture ─── */
+  .email-section {
+    background: var(--color-bg);
+    border-radius: 10px;
+    padding: 22px;
+    border: 1px solid var(--color-border);
+    margin-bottom: 28px;
+  }
+
+  .email-section h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 6px;
+  }
+
+  .email-section p {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: 14px;
+    line-height: 1.55;
+  }
+
+  .email-row {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+  }
+
+  @media (min-width: 420px) {
+    .email-row { flex-direction: row; }
+  }
+
+  .email-input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-btn);
+    font-size: 0.95rem;
+    color: var(--color-text);
+    background: var(--color-card);
+    transition: border-color var(--transition);
+    min-height: 48px;
+  }
+
+  .email-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+
+  .email-input.error { border-color: var(--color-error); }
+
+  .email-submit-btn {
+    padding: 12px 18px;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-btn);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition);
+    white-space: nowrap;
+    min-height: 48px;
+  }
+
+  .email-submit-btn:hover { background: #2A4A7F; }
+  .email-submit-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+  .email-error {
+    font-size: 0.82rem;
+    color: var(--color-text-light);
+    margin-top: 6px;
+  }
+
+  .email-success {
+    font-size: 0.9rem;
+    color: var(--color-success);
+    font-weight: 500;
+    padding: 10px 0 4px;
+  }
+
+  /* ─── Partner block ─── */
+  .partner-block {
+    border: 1.5px solid var(--color-border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .partner-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-light);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .partner-block h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+  }
+
+  .partner-block p {
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+
+  .partner-cta {
+    display: block;
+    width: 100%;
+    min-height: 52px;
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--color-accent);
+    border: none;
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background var(--transition);
+    line-height: 1.4;
+  }
+
+  .partner-cta:hover { background: var(--color-accent-hover); }
+  .partner-cta:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+  /* ─── Start over ─── */
+  .start-over {
+    display: block;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 8px;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: color var(--transition), text-decoration-color var(--transition);
+    margin: 0 auto;
+  }
+
+  .start-over:hover {
+    color: var(--color-text);
+    text-decoration-color: currentColor;
+  }
+
+  /* ─── Returning banner ─── */
+  .returning-banner {
+    background: var(--color-accent-light);
+    border: 1px solid #81E6D9;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.875rem;
+    color: var(--color-primary);
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+
+</style>
+</head>
+<body>
+
+<main>
+  <div class="brand">Pathfinder</div>
+  <div class="card" id="app-card">
+
+    <!-- SCREEN 0: Welcome -->
+    <section class="screen active" id="screen-0" role="region" aria-label="Welcome">
+      <span class="card-icon">🧭</span>
+      <h1>Find your starting point in 2 minutes</h1>
+      <p class="subheadline">Tell us a little about your situation — we'll help you understand which type of solution fits best.</p>
+      <button class="cta-btn" id="btn-start" tabindex="0">Start</button>
+    </section>
+
+    <!-- SCREEN 1: Goal -->
+    <section class="screen" id="screen-1" role="region" aria-label="Question 1 of 4">
+      <div class="step-indicator" aria-label="Step 1 of 4">
+        <div class="step-dots">
+          <div class="step-dot current"></div>
+          <div class="step-dot"></div>
+          <div class="step-dot"></div>
+          <div class="step-dot"></div>
+        </div>
+        <span class="step-label">Step 1 of 4</span>
+      </div>
+      <h2>What would you say is your main goal right now?</h2>
+      <div class="options" role="group" aria-label="Goal options">
+        <button class="option-btn" data-key="G" data-val="G1" tabindex="0">Combine several debts into one simple payment</button>
+        <button class="option-btn" data-key="G" data-val="G2" tabindex="0">Cover a large, unexpected expense</button>
+        <button class="option-btn" data-key="G" data-val="G3" tabindex="0">Make a planned major purchase</button>
+        <button class="option-btn" data-key="G" data-val="G4" tabindex="0">Build or strengthen my credit profile</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: Timeline -->
+    <section class="screen" id="screen-2" role="region" aria-label="Question 2 of 4">
+      <div class="step-indicator" aria-label="Step 2 of 4">
+        <div class="step-dots">
+          <div class="step-dot done"></div>
+          <div class="step-dot current"></div>
+          <div class="step-dot"></div>
+          <div class="step-dot"></div>
+        </div>
+        <span class="step-label">Step 2 of 4</span>
+      </div>
+      <h2>How soon are you hoping to have a plan in place?</h2>
+      <div class="options" role="group" aria-label="Timeline options">
+        <button class="option-btn" data-key="U" data-val="U1" tabindex="0">I'm actively looking for a solution right now</button>
+        <button class="option-btn" data-key="U" data-val="U2" tabindex="0">I'm researching options for the near future</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: Credit Comfort -->
+    <section class="screen" id="screen-3" role="region" aria-label="Question 3 of 4">
+      <div class="step-indicator" aria-label="Step 3 of 4">
+        <div class="step-dots">
+          <div class="step-dot done"></div>
+          <div class="step-dot done"></div>
+          <div class="step-dot current"></div>
+          <div class="step-dot"></div>
+        </div>
+        <span class="step-label">Step 3 of 4</span>
+      </div>
+      <h2>How would you describe your credit comfort level today?</h2>
+      <div class="options" role="group" aria-label="Credit comfort options">
+        <button class="option-btn" data-key="C" data-val="C1" tabindex="0">I'm in a strong position</button>
+        <button class="option-btn" data-key="C" data-val="C2" tabindex="0">It's okay — there's room to improve</button>
+        <button class="option-btn" data-key="C" data-val="C3" tabindex="0">I'm working on rebuilding it</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 4: Priority -->
+    <section class="screen" id="screen-4" role="region" aria-label="Question 4 of 4">
+      <div class="step-indicator" aria-label="Step 4 of 4">
+        <div class="step-dots">
+          <div class="step-dot done"></div>
+          <div class="step-dot done"></div>
+          <div class="step-dot done"></div>
+          <div class="step-dot current"></div>
+        </div>
+        <span class="step-label">Step 4 of 4</span>
+      </div>
+      <h2>When you think about a financial solution, what's most important to you?</h2>
+      <div class="options" role="group" aria-label="Priority options">
+        <button class="option-btn" data-key="P" data-val="P1" tabindex="0">The lowest overall cost</button>
+        <button class="option-btn" data-key="P" data-val="P2" tabindex="0">Fast and straightforward access</button>
+        <button class="option-btn" data-key="P" data-val="P3" tabindex="0">Clear, predictable terms with no surprises</button>
+        <button class="option-btn" data-key="P" data-val="P4" tabindex="0">Something that helps my credit over time</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 5: Results -->
+    <section class="screen" id="screen-5" role="region" aria-label="Your Path Summary">
+      <div id="results-content"></div>
+
+
+      <!-- Partner Offer Bridge -->
+      <div class="partner-block">
+        <span class="partner-eyebrow">Matched for your profile</span>
+        <h3>A partner that specializes in exactly this situation</h3>
+        <p>We've reviewed your profile. The type of solution that matches your path is offered by a trusted partner we work with. Their terms are transparent, the process is straightforward, and they focus on situations just like yours.</p>
+        <!-- PARTNER LINK: replace href with actual partner offer URL -->
+        <a href="#partner-offer" class="partner-cta" tabindex="0">See partner terms →</a>
+      </div>
+
+      <button class="start-over" id="btn-restart" tabindex="0">Start over</button>
+    </section>
+
+  </div><!-- /.card -->
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // ─── State ───────────────────────────────────────────────
+  const state = { G: null, U: null, C: null, P: null };
+  let currentScreen = 0;
+
+  // ─── Content Matrix ──────────────────────────────────────
+
+  const block1 = {
+    G1: {
+      C1: "You're in a great spot to simplify your finances on favorable terms.",
+      C2: "For your situation, consolidation is about clarity first — savings come second.",
+      C3: "Combining your debts can be a smart first move toward a cleaner financial picture."
+    },
+    G2: {
+      C1: "You've got a solid foundation — you can take your time picking the right solution, no compromises needed.",
+      C2: "Unexpected expenses happen. The goal is covering them without creating new headaches down the road.",
+      C3: "Here, it's all about finding an option that won't add pressure to your current situation and still leaves you room to breathe."
+    },
+    G3: {
+      C1: "With your profile, you can comfortably shop around and choose the best offer — not just the first one you see.",
+      C2: "A big purchase shouldn't throw your budget off track. Look for a solution with flexible terms and some breathing room.",
+      C3: "Even if your credit history isn't perfect, a planned purchase can be handled calmly and wisely."
+    },
+    G4: {
+      C1: "Good news: you're already in a strong place. Now you can reinforce your credit with minimal cost and effort.",
+      C2: "You're on the right path. A few thoughtful moves can make a visible difference in your credit profile.",
+      C3: "Rebuilding is a process — and it's entirely doable when you take it step by step."
+    }
+  };
+
+  const block2 = {
+    G1: {
+      P1: "In your case, the best move is to look for fixed-rate programs with no hidden fees. Your goal isn't just a lower monthly payment — it's paying less overall.",
+      P2: "Speed matters, but with consolidation it's worth spending at least a day comparing total cost. A fast decision shouldn't mean an expensive one.",
+      P3: "Transparency is everything for you. Look for options with no prepayment penalties and a fixed payment schedule you can count on.",
+      P4: "Consolidation and credit improvement can work hand in hand — just make sure the program reports to all three major bureaus. Ask this upfront."
+    },
+    G2: {
+      P1: "Even when things are urgent, don't jump at the first offer. Compare APR, not just the monthly payment — that's what saves you real money.",
+      P2: "Speed is justified here. Just double-check there aren't hidden fees buried in the fast process. Fast and transparent does exist.",
+      P3: "Under stress, it's easy to skim the fine print. Make a rule: one contract, one evening to read it. Every term should be crystal clear.",
+      P4: "Even an emergency option can work as a credit-building tool — if you pick a program that reports to the bureaus."
+    },
+    G3: {
+      P1: "Since this purchase is planned, you have time to negotiate on terms. Compare not just APR, but every associated fee.",
+      P2: "Fast doesn't mean careless. A quick process is great — as long as you're not giving up a significantly better deal for it.",
+      P3: "Your biggest advantage is time. Use it to find a contract with absolute transparency. No vague language, no hidden clauses.",
+      P4: "A major purchase can strengthen your credit mix. Choose a product that will show up positively on your reports."
+    },
+    G4: {
+      P1: "You don't need to overspend to build credit. Look for credit-builder products with low annual costs and sensible terms.",
+      P2: "Quick enrollment is a plus. But make sure the program actually reports to the credit bureaus — otherwise the speed doesn't help.",
+      P3: "The ideal scenario: a fixed monthly payment, interest you can calculate in advance, transparent bureau reporting. Zero surprises.",
+      P4: "You're looking in exactly the right direction. A small account with bureau reporting and on-time payments does more for your credit than a large one without it."
+    }
+  };
+
+  const block3 = {
+    U1: {
+      P1: "When you're actively searching, it's tempting to chase the lowest advertised figure and overlook fees. Always check the full cost — not just the headline number.",
+      P2: "Fast doesn't mean blind. Spend 15 minutes checking a company's reputation. It can save you weeks of stress later.",
+      P3: "Right now, the biggest risk is letting urgency blur the details. Read the final agreement — not just the summary card.",
+      P4: "Even an urgent need can become a building block for your credit. Ask your partner directly about bureau reporting."
+    },
+    U2: {
+      P1: "You've got time to compare calmly. Make a simple table: three options, three columns — terms, fees, timeline.",
+      P2: "Since there's no rush, find out how long the process typically takes at different companies. That knowledge will pay off later.",
+      P3: "Use this time to read real customer reviews and verify how transparent each company really is. That's your best investment right now.",
+      P4: "You're in an excellent position: no urgency, so you can thoughtfully pick a product that solves your need and strengthens your credit at the same time."
+    }
+  };
+
+  const block4 = {
+    G1: {
+      P1: ["What is the total cost including all fees?", "Is there a prepayment penalty?", "Is the new payment genuinely lower than what I pay now across all debts?"],
+      P2: ["How many days until funds actually arrive?", "Am I giving up a better deal for speed?", "Can I understand the payment schedule at a glance?"],
+      P3: ["Are all fees disclosed before I sign?", "Can I pay it off early without a penalty?", "Are there any paragraphs written in confusing language?"],
+      P4: ["Does the company report to all three major credit bureaus?", "Will consolidation positively affect my credit mix?", "Will this new application temporarily impact my profile?"]
+    },
+    G2: {
+      P1: ["What's the total repayment amount, not just the monthly figure?", "Are there hidden origination fees?", "Can I pay it off early and save on interest?"],
+      P2: ["Is the advertised funding speed realistic?", "What documents do I need ready for a fast process?", "Does the fast track come with less favorable terms?"],
+      P3: ["Are all terms written in plain, straightforward language?", "Is the arrangement fixed or variable?", "What exactly happens if I miss a payment — is it clearly explained?"],
+      P4: ["Will this appear on my credit reports?", "Can it help diversify my credit profile?", "How do I protect my progress if something unexpected happens later?"]
+    },
+    G3: {
+      P1: ["Have I compared at least three offers by total cost?", "Are there setup or maintenance fees I'm missing?", "Can I save money by choosing a shorter term?"],
+      P2: ["Does getting funds faster significantly change the overall deal?", "What matters more to me right now: speed or total savings?", "Are my documents ready so I can move quickly when I decide?"],
+      P3: ["Could I explain this contract to a friend in under a minute?", "Are there any references to 'variable terms'?", "Is the arrangement locked for the full term?"],
+      P4: ["Will this purchase improve my credit mix?", "Does the provider report to the bureaus?", "How does this new payment affect my overall financial picture?"]
+    },
+    G4: {
+      P1: ["What's the real annual cost — not just the advertised one?", "Is there a less expensive way to reach the same credit goal?", "Do the credit benefits justify the interest cost?"],
+      P2: ["How soon does the account open and start reporting?", "When will the first update hit my credit file?", "Does faster access compromise the credit-building aspect?"],
+      P3: ["Are all payments fixed and predictable?", "Are there any floating or adjustable conditions?", "What happens if I want to close the program early?"],
+      P4: ["Does the product report to all three major credit bureaus?", "Which specific credit factor does it improve first?", "Does the partner offer any credit education resources?"]
+    }
+  };
+
+  const goalLabels = {
+    G1: "Debt Consolidation",
+    G2: "Unexpected Expense",
+    G3: "Planned Purchase",
+    G4: "Building Credit"
+  };
+
+  // ─── Screen management ────────────────────────────────────
+  function showScreen(index) {
+    const screens = document.querySelectorAll('.screen');
+    const current = document.querySelector('.screen.active');
+
+    if (current) {
+      current.classList.add('exit');
+      current.classList.remove('active');
+      setTimeout(() => { current.classList.remove('exit'); }, 300);
+    }
+
+    setTimeout(() => {
+      screens[index].classList.add('active');
+      currentScreen = index;
+      // Scroll card top into view smoothly
+      document.getElementById('app-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 220);
+  }
+
+  // ─── Option selection logic ───────────────────────────────
+  function handleOptionClick(btn, nextScreen) {
+    const key = btn.dataset.key;
+    const val = btn.dataset.val;
+
+    // Mark selected
+    btn.closest('.options').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+
+    // Store
+    state[key] = val;
+
+    // Advance
+    setTimeout(() => {
+      if (nextScreen === 5) {
+        buildResults();
+        saveToStorage();
+      }
+      showScreen(nextScreen);
+    }, 400);
+  }
+
+  // ─── Build results screen ─────────────────────────────────
+  function buildResults() {
+    const { G, U, C, P } = state;
+    const container = document.getElementById('results-content');
+
+    const b1 = block1[G][C];
+    const b2 = block2[G][P];
+    const b3 = block3[U][P];
+    const b4 = block4[G][P];
+
+    const goalLabel = goalLabels[G] || "Your Goal";
+
+    const questions = b4.map(q => `<li>${q}</li>`).join('');
+
+    container.innerHTML = `
+      <div class="returning-banner" id="results-banner" style="display:none;">
+        Welcome back — here's your saved path summary.
+      </div>
+
+      <div class="result-header-block">
+        <span class="result-label">Your situation — ${goalLabel}</span>
+        <div class="result-text">${b1}</div>
+      </div>
+
+      <div class="result-block">
+        <span class="result-label">What makes sense for you</span>
+        <div class="result-text">${b2}</div>
+      </div>
+
+      <div class="result-divider"></div>
+
+      <div class="result-block">
+        <span class="result-label">Right now</span>
+        <div class="result-text">${b3}</div>
+      </div>
+
+      <div class="result-divider"></div>
+
+      <div class="result-block">
+        <span class="result-label">Questions to ask before you choose</span>
+        <ul class="result-questions">${questions}</ul>
+      </div>
+
+      <div class="result-divider"></div>
+    `;
+  }
+
+  // ─── localStorage ─────────────────────────────────────────
+  const STORAGE_KEY = 'pathfinder_v1';
+
+  function saveToStorage() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) { /* storage might be unavailable */ }
+  }
+
+  function loadFromStorage() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (e) { return null; }
+  }
+
+  function clearStorage() {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  }
+
+  // ─── Email capture ────────────────────────────────────────
+  function setupEmail() {
+    const input = document.getElementById('email-input');
+    const btn = document.getElementById('email-submit');
+    const errEl = document.getElementById('email-error');
+    const successEl = document.getElementById('email-success');
+
+    btn.addEventListener('click', () => {
+      const email = input.value.trim();
+      const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+      if (!valid) {
+        input.classList.add('error');
+        errEl.style.display = 'block';
+        successEl.style.display = 'none';
+        return;
+      }
+
+      input.classList.remove('error');
+      errEl.style.display = 'none';
+
+      // Store email
+      const pathData = { ...state, email };
+      console.log('User path + email:', pathData);
+      // In production: POST to your API endpoint
+
+      // Show success
+      document.getElementById('email-section').innerHTML = `
+        <p class="email-success">Done — your path summary is on its way. Check your inbox.</p>
+      `;
+    });
+
+    input.addEventListener('input', () => {
+      input.classList.remove('error');
+      errEl.style.display = 'none';
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') btn.click();
+    });
+  }
+
+  // ─── Wire up everything ───────────────────────────────────
+  function init() {
+    // Check for saved path
+    const saved = loadFromStorage();
+    if (saved && saved.G && saved.U && saved.C && saved.P) {
+      Object.assign(state, saved);
+      buildResults();
+      // Show returning banner
+      setTimeout(() => {
+        const banner = document.getElementById('results-banner');
+        if (banner) banner.style.display = 'block';
+      }, 350);
+      showScreen(5);
+    }
+
+    // Start button
+    document.getElementById('btn-start').addEventListener('click', () => showScreen(1));
+
+    // Question 1 options → screen 2
+    document.querySelectorAll('#screen-1 .option-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleOptionClick(btn, 2));
+    });
+
+    // Question 2 options → screen 3
+    document.querySelectorAll('#screen-2 .option-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleOptionClick(btn, 3));
+    });
+
+    // Question 3 options → screen 4
+    document.querySelectorAll('#screen-3 .option-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleOptionClick(btn, 4));
+    });
+
+    // Question 4 options → screen 5 (results)
+    document.querySelectorAll('#screen-4 .option-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleOptionClick(btn, 5));
+    });
+
+    // Restart
+    document.getElementById('btn-restart').addEventListener('click', () => {
+      clearStorage();
+      state.G = state.U = state.C = state.P = null;
+      // Reset all option buttons
+      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+      showScreen(0);
+    });
+
+    // Email
+    setupEmail();
+
+    // Keyboard: allow Enter/Space on option buttons
+    document.querySelectorAll('.option-btn').forEach(btn => {
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>

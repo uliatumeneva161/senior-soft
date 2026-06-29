@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ФИНАНСЫ</title>
+    <style>
+        :root {
+            --color-bg: #F8FAFC;
+            --color-primary: #1E293B;
+            --color-accent: #0D9488;
+            --color-accent-hover: #0F766E;
+            --color-text: #1E293B;
+            --color-text-secondary: #64748B;
+            --color-border: #E2E8F0;
+            --radius-card: 16px;
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%);
+            background-attachment: fixed;
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .header-icon {
+            font-size: 3rem;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        @media (min-width: 480px) {
+            .cards {
+                flex-direction: row;
+            }
+        }
+
+        .card {
+            flex: 1;
+            background: #fff;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-card);
+            padding: 32px 24px;
+            text-decoration: none;
+            color: var(--color-text);
+            transition: all var(--transition);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--color-accent);
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--color-accent);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            width: 64px;
+            height: 64px;
+            background: #F0FDFA;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .card p {
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+        }
+
+        .card .arrow {
+            font-size: 0.85rem;
+            color: var(--color-accent);
+            font-weight: 600;
+            transition: transform var(--transition);
+        }
+
+        .card:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        .footer {
+            margin-top: 32px;
+            font-size: 0.75rem;
+            color: #94A3B8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- <div class="header-icon">🧭</div> -->
+        <!-- <h1>Pathfinder</h1> -->
+        <!-- <p class="subtitle">Choose which version you'd like to preview. Both lead to the same personalized result — just a different experience.</p> -->
+
+        <div class="cards">
+            <a href="chat.html" class="card">
+                <div class="card-icon">💬</div>
+                <h2>Чат</h2>
+                <!-- <p>Conversational flow — bot asks questions, you reply. Feels like a messenger.</p> -->
+                <span class="arrow">Открыть</span>
+            </a>
+
+            <a href="opros.html" class="card">
+                <div class="card-icon">📋</div>
+                <h2>Квиз на тему денегш</h2>
+                <!-- <p>Step-by-step form — clean screens, progress bar, direct answers.</p> -->
+                <span class="arrow">Открыть</span>
+            </a>
+        </div>
+
+        <!-- <p class="footer">Financial Pre-Lander · USA Audience · v1</p> -->
+    </div>
+</body>
+</html>
